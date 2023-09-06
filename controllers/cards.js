@@ -25,11 +25,14 @@ module.exports.deleteCardById = (req, res) => Cards.findByIdAndRemove(req.params
     if (!card) {
       return res.status(404).send({ message: 'Карточка с указанным _id не найдена.' })
     }
+    if (req.user.id !== card.owner) {
+      return res.status(403).send({ message: 'У вас нет прав для удаления этой карточки.' })
+    }
     return res.send({ data: card })
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(404).send({ message: 'Карточка с указанным _id не найдена.' })
+      res.status(400).send({ message: 'Карточка с указанным _id не найдена.' })
     }
   })
 
