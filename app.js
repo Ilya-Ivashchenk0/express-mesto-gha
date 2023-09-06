@@ -1,10 +1,22 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const mongoose = require('./db')
+const mongoose = require('mongoose')
 const loger = require('./utils/loger')
 
 const { PORT = 3000 } = process.env
+
+mongoose.connect('mongodb://localhost:27017/mestodb', {
+  useNewUrlParser: true,
+})
+
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB')
+})
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err)
+})
 
 const app = express()
 app.use(bodyParser.json())
