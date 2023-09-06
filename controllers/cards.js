@@ -14,9 +14,9 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' })
+        return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' })
       }
-      res.status(500).send({ message: 'На сервере произошла ошибка' })
+      return res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
 
@@ -32,8 +32,9 @@ module.exports.deleteCardById = (req, res) => Cards.findByIdAndRemove(req.params
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Карточка с указанным _id не найдена.' })
+      return res.status(400).send({ message: 'Карточка с указанным _id не найдена.' })
     }
+    return res.status(500).send({ message: 'На сервере произошла ошибка' })
   })
 
 module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
@@ -44,12 +45,12 @@ module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
   .then((card) => res.send({ data: card }))
   .catch((err) => {
     if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятия лайка.' })
+      return res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятия лайка.' })
     }
     if (err.name === 'CastError') {
-      res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
+      return res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
     }
-    res.status(500).send({ message: 'На сервере произошла ошибка' })
+    return res.status(500).send({ message: 'На сервере произошла ошибка' })
   })
 
 module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
@@ -60,10 +61,10 @@ module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
   .then((card) => res.send({ data: card }))
   .catch((err) => {
     if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятия лайка.' })
+      return res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятия лайка.' })
     }
     if (err.name === 'CastError') {
-      res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
+      return res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
     }
-    res.status(500).send({ message: 'На сервере произошла ошибка' })
+    return res.status(500).send({ message: 'На сервере произошла ошибка' })
   })

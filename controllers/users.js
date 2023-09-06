@@ -10,12 +10,17 @@ module.exports.getUserById = (req, res) => {
   const { userId } = req.params
 
   Users.findById(userId)
-    .then((users) => res.send({ data: users }))
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: 'Пользователь по указанному _id не найден.' })
+      }
+      return res.send({ data: user })
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Пользователь по указанному _id не найден.' })
+        return res.status(400).send({ message: 'Пользователь по указанному _id не найден.' })
       }
-      res.status(500).send({ message: 'На сервере произошла ошибка' })
+      return res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
 
@@ -26,9 +31,9 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' })
+        return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' })
       }
-      res.status(500).send({ message: 'На сервере произошла ошибка' })
+      return res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
 
@@ -43,12 +48,12 @@ module.exports.updateProfile = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' })
+        return res.status(404).send({ message: 'Переданы некорректные данные при обновлении профиля.' })
       }
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Пользователь с указанным _id не найден.' })
+        return res.status(400).send({ message: 'Пользователь с указанным _id не найден.' })
       }
-      res.status(500).send({ message: 'На сервере произошла ошибка' })
+      return res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
 
@@ -63,11 +68,11 @@ module.exports.updateAvatar = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' })
+        return res.status(404).send({ message: 'Переданы некорректные данные при обновлении профиля.' })
       }
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Пользователь с указанным _id не найден.' })
+        return res.status(400).send({ message: 'Пользователь с указанным _id не найден.' })
       }
-      res.status(500).send({ message: 'На сервере произошла ошибка' })
+      return res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
