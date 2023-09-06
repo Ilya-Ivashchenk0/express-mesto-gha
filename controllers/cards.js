@@ -3,7 +3,7 @@ const Cards = require('../models/card')
 module.exports.getAllCards = (req, res) => {
   Cards.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }))
+    .catch((err) => res.status(500).send({ message: 'На сервере произошла ошибка' }))
 }
 
 module.exports.createCard = (req, res) => {
@@ -16,7 +16,7 @@ module.exports.createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' })
       }
-      res.status(500).send({ message: `Произошла ошибка: ${err}` })
+      res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
 
@@ -49,7 +49,7 @@ module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
     if (err.name === 'CastError') {
       res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
     }
-    res.status(500).send({ message: `Произошла ошибка: ${err}` })
+    res.status(500).send({ message: 'На сервере произошла ошибка' })
   })
 
 module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
@@ -65,5 +65,5 @@ module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
     if (err.name === 'CastError') {
       res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
     }
-    res.status(500).send({ message: `Произошла ошибка: ${err}` })
+    res.status(500).send({ message: 'На сервере произошла ошибка' })
   })

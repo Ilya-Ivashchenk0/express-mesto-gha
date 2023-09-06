@@ -3,7 +3,7 @@ const Users = require('../models/user')
 module.exports.getAllUsers = (req, res) => {
   Users.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }))
+    .catch((err) => res.status(500).send({ message: 'На сервере произошла ошибка' }))
 }
 
 module.exports.getUserById = (req, res) => {
@@ -15,7 +15,7 @@ module.exports.getUserById = (req, res) => {
       if (err.name === 'CastError') {
         res.status(404).send({ message: 'Пользователь по указанному _id не найден.' })
       }
-      res.status(500).send({ message: `Произошла ошибка: ${err}` })
+      res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
 
@@ -28,7 +28,7 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' })
       }
-      res.status(500).send({ message: `Произошла ошибка: ${err}` })
+      res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
 
@@ -48,7 +48,7 @@ module.exports.updateProfile = (req, res) => {
       if (err.name === 'CastError') {
         res.status(404).send({ message: 'Пользователь с указанным _id не найден.' })
       }
-      res.status(500).send({ message: `Произошла ошибка: ${err}` })
+      res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
 
@@ -68,6 +68,6 @@ module.exports.updateAvatar = (req, res) => {
       if (err.name === 'CastError') {
         res.status(404).send({ message: 'Пользователь с указанным _id не найден.' })
       }
-      res.status(500).send({ message: `Произошла ошибка: ${err}` })
+      res.status(500).send({ message: 'На сервере произошла ошибка' })
     })
 }
