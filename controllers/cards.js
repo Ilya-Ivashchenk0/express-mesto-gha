@@ -20,18 +20,18 @@ module.exports.createCard = (req, res) => {
     })
 }
 
-module.exports.deleteCardById = (req, res) => {
-  const { cardId } = req.params
-
-  Cards.findByIdAndRemove(cardId)
-    .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Карточка с указанным _id не найдена.' })
-      }
-      res.status(500).send({ message: `Произошла ошибка: ${err}` })
-    })
-}
+module.exports.deleteCardById = (req, res) => Cards.findByIdAndRemove(req.params.cardId)
+  .then((card) => {
+    if (!card) {
+      return res.status(404).send({ message: 'Карточка с указанным _id не найдена.' })
+    }
+    return res.send({ data: card })
+  })
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      res.status(404).send({ message: 'Карточка с указанным _id не найдена.' })
+    }
+  })
 
 module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
   req.params.cardId,
