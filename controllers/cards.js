@@ -26,7 +26,7 @@ module.exports.deleteCardById = (req, res) => Cards.findByIdAndRemove(req.params
       return res.status(404).send({ message: 'Карточка с указанным _id не найдена.' })
     }
     if (req.user._id !== card.owner) {
-      return res.status(403).send({ message: 'У вас нет прав для удаления этой карточки.' })
+      return res.status(200).send({ message: 'У вас нет прав для удаления этой карточки.' })
     }
     return res.send({ data: card })
   })
@@ -42,13 +42,18 @@ module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } },
   { new: true }
 )
-  .then((card) => res.send({ data: card }))
+  .then((card) => {
+    if (!card) {
+      return res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
+    }
+    return res.send({ data: card })
+  })
   .catch((err) => {
     if (err.name === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятия лайка.' })
     }
     if (err.name === 'CastError') {
-      return res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
+      return res.status(400).send({ message: 'Передан несуществующий _id карточки.' })
     }
     return res.status(500).send({ message: 'На сервере произошла ошибка' })
   })
@@ -58,13 +63,18 @@ module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
   { $pull: { likes: req.user._id } },
   { new: true }
 )
-  .then((card) => res.send({ data: card }))
+  .then((card) => {
+    if (!card) {
+      return res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
+    }
+    return res.send({ data: card })
+  })
   .catch((err) => {
     if (err.name === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятия лайка.' })
     }
     if (err.name === 'CastError') {
-      return res.status(404).send({ message: 'Передан несуществующий _id карточки.' })
+      return res.status(400).send({ message: 'Передан несуществующий _id карточки.' })
     }
     return res.status(500).send({ message: 'На сервере произошла ошибка' })
   })
