@@ -36,6 +36,10 @@ app.use((req, res, next) => {
 app.use('/users', require('./routes/users'))
 app.use('/cards', require('./routes/cards'))
 
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'Карточка или пользователь не найдены, или был запрошен несуществующий роут.' })
+})
+
 app.listen(PORT, () => {
   console.log('Server listening on port:', PORT)
 })
