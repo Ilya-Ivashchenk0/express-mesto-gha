@@ -1,0 +1,24 @@
+{
+  "name": "express-mesto-gha",
+  "version": "0.1.0",
+  "private": true,
+  "main": "app.js",
+  "author": "Ilya-Ivashchenk0",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "eslint": "^8.48.0",
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "npx eslint . --fix && nodemon app.js",
+    "lint": "npx eslint . --fix"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "nodemon": "^3.0.1"
+  }
+}

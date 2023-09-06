@@ -1,0 +1,12 @@
+{
+  "extends": "airbnb-base",
+  "globals": {
+    "_id": "readonly"
+  },
+  "rules": {
+    "semi": ["error", "never"],
+    "no-unused-vars": "off",
+    "no-console": "off",
+    "comma-dangle": "off"
+  }
+}
