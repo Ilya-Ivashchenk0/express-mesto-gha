@@ -1,22 +1,21 @@
 const Cards = require('../models/card')
-const errorsHandling = require('../middlewares/errorsHandling')
 
-module.exports.getAllCards = (req, res) => {
+module.exports.getAllCards = (req, res, next) => {
   Cards.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body
   const owner = req.user._id
 
   Cards.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }
 
-module.exports.deleteCardById = (req, res) => Cards.findByIdAndRemove(req.params.cardId)
+module.exports.deleteCardById = (req, res, next) => Cards.findByIdAndRemove(req.params.cardId)
   .then((card) => {
     if (!card) {
       return res.status(404).send({ message: 'Карточка с указанным _id не найдена.' })
@@ -26,9 +25,9 @@ module.exports.deleteCardById = (req, res) => Cards.findByIdAndRemove(req.params
     }
     return res.send({ data: card })
   })
-  .catch((err) => errorsHandling(err))
+  .catch((err) => next(err))
 
-module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
+module.exports.addLikeCard = (req, res, next) => Cards.findByIdAndUpdate(
   req.params.cardId,
   { $addToSet: { likes: req.user._id } },
   { new: true }
@@ -39,9 +38,9 @@ module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
     }
     return res.send({ data: card })
   })
-  .catch((err) => errorsHandling(err))
+  .catch((err) => next(err))
 
-module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
+module.exports.deleteLikeCard = (req, res, next) => Cards.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } },
   { new: true }
@@ -52,4 +51,4 @@ module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
     }
     return res.send({ data: card })
   })
-  .catch((err) => errorsHandling(err))
+  .catch((err) => next(err))

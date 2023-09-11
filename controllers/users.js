@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Users = require('../models/user')
-const errorsHandling = require('../middlewares/errorsHandling')
 
 module.exports.getAllUsers = (req, res, next) => {
   Users.find({})
