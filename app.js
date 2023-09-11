@@ -8,7 +8,7 @@ const { login, createUser } = require('./controllers/users')
 const auth = require('./middlewares/auth')
 const errorsHandling = require('./middlewares/errorsHandling')
 
-mongoose.connect(process.env.BD_URL, { useNewUrlParser: true })
+mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true })
 mongoose.connection.on('connected', () => console.log('MongoDB is connected to the server.'))
 mongoose.connection.on('error', (err) => console.error('MongoDB connection error:', err))
 
