@@ -3,13 +3,13 @@ const jwt = require('jsonwebtoken')
 const Users = require('../models/user')
 const errorsHandling = require('../middlewares/errorsHandling')
 
-module.exports.getAllUsers = (req, res) => {
+module.exports.getAllUsers = (req, res, next) => {
   Users.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }
 
-module.exports.getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params
 
   Users.findById(userId)
@@ -19,10 +19,10 @@ module.exports.getUserById = (req, res) => {
       }
       return res.send({ data: user })
     })
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     email,
     password,
@@ -40,10 +40,10 @@ module.exports.createUser = (req, res) => {
       avatar
     }))
     .then((user) => res.status(201).send({ _id: user._id, email: user.email }))
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }
 
-module.exports.updateProfile = (req, res) => {
+module.exports.updateProfile = (req, res, next) => {
   const { name, about, avatar } = req.body
 
   Users.findByIdAndUpdate(
@@ -52,10 +52,10 @@ module.exports.updateProfile = (req, res) => {
     { new: true, runValidators: true }
   )
     .then((user) => res.send({ data: user }))
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body
 
   Users.findByIdAndUpdate(
@@ -64,10 +64,10 @@ module.exports.updateAvatar = (req, res) => {
     { new: true, runValidators: true }
   )
     .then((user) => res.send({ data: user }))
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body
 
   Users.findOne({ email }).select('+password')
@@ -75,7 +75,7 @@ module.exports.login = (req, res) => {
       if (!user) {
         return res.status(401).send({ message: 'Пользователь с указанным логином и паролем не найден.' })
       }
-
+      console.log(user)
       return bcrypt.compare(password, user.password)
         .then((check) => {
           if (!check) {
@@ -95,10 +95,10 @@ module.exports.login = (req, res) => {
             .send({ message: 'Вход выполнен успешно!' })
         })
     })
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }
 
-module.exports.getUserInfo = (req, res) => {
+module.exports.getUserInfo = (req, res, next) => {
   const { userId } = req.body
 
   Users.findById(userId)
@@ -108,5 +108,5 @@ module.exports.getUserInfo = (req, res) => {
       }
       return res.send({ data: user })
     })
-    .catch((err) => errorsHandling(err))
+    .catch((err) => next(err))
 }

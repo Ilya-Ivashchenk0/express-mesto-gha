@@ -7,20 +7,15 @@ module.exports = (err, req, res, next) => {
     message = 'Пользователь с таким email уже существует.'
   }
 
-  if (err.code === 'ValidationError') {
+  if (err.name === 'ValidationError') {
     statusCode = 400
     message = 'Переданы некорректные данные при обновлении профиля.'
   }
 
-  if (err.code === 'CastError') {
+  if (err.name === 'CastError') {
     statusCode = 400
     message = 'Пользователь с указанным _id не найден.'
   }
 
-  // if (err.code === 11000) {
-  //   statusCode = 409
-  //   message = 'Пользователь с таким email уже существует'
-  // }
-
-  return res.status(statusCode).send({ message })
+  res.status(statusCode).send({ message })
 }
