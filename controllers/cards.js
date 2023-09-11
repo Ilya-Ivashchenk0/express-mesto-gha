@@ -1,9 +1,10 @@
 const Cards = require('../models/card')
+const errorsHandling = require('../middlewares/errorsHandling')
 
 module.exports.getAllCards = (req, res) => {
   Cards.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(500).send({ message: 'На сервере произошла ошибка' }))
+    .catch((err) => errorsHandling(err))
 }
 
 module.exports.createCard = (req, res) => {
@@ -12,12 +13,7 @@ module.exports.createCard = (req, res) => {
 
   Cards.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' })
-      }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' })
-    })
+    .catch((err) => errorsHandling(err))
 }
 
 module.exports.deleteCardById = (req, res) => Cards.findByIdAndRemove(req.params.cardId)
@@ -30,12 +26,7 @@ module.exports.deleteCardById = (req, res) => Cards.findByIdAndRemove(req.params
     }
     return res.send({ data: card })
   })
-  .catch((err) => {
-    if (err.name === 'CastError') {
-      return res.status(400).send({ message: 'Карточка с указанным _id не найдена.' })
-    }
-    return res.status(500).send({ message: 'На сервере произошла ошибка' })
-  })
+  .catch((err) => errorsHandling(err))
 
 module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
   req.params.cardId,
@@ -48,15 +39,7 @@ module.exports.addLikeCard = (req, res) => Cards.findByIdAndUpdate(
     }
     return res.send({ data: card })
   })
-  .catch((err) => {
-    if (err.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятия лайка.' })
-    }
-    if (err.name === 'CastError') {
-      return res.status(400).send({ message: 'Передан несуществующий _id карточки.' })
-    }
-    return res.status(500).send({ message: 'На сервере произошла ошибка' })
-  })
+  .catch((err) => errorsHandling(err))
 
 module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
   req.params.cardId,
@@ -69,12 +52,4 @@ module.exports.deleteLikeCard = (req, res) => Cards.findByIdAndUpdate(
     }
     return res.send({ data: card })
   })
-  .catch((err) => {
-    if (err.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятия лайка.' })
-    }
-    if (err.name === 'CastError') {
-      return res.status(400).send({ message: 'Передан несуществующий _id карточки.' })
-    }
-    return res.status(500).send({ message: 'На сервере произошла ошибка' })
-  })
+  .catch((err) => errorsHandling(err))
