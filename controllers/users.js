@@ -30,7 +30,11 @@ module.exports.createUser = (req, res, next) => {
     avatar
   } = req.body
 
-  bcrypt.hash(password, 10)
+  if (!email && !password) {
+    return res.status(400).send({ message: 'Переданы неправильные почта или пароль.' })
+  }
+
+  return bcrypt.hash(password, 10)
     .then((hash) => Users.create({
       email,
       password: hash,
@@ -69,10 +73,14 @@ module.exports.updateAvatar = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body
 
-  Users.findOne({ email }).select('+password')
+  if (!email && !password) {
+    return res.status(400).send({ message: 'Переданы неправильные почта или пароль.' })
+  }
+
+  return Users.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return res.status(401).send({ message: 'Пользователь с указанным логином и паролем не найден.' })
+        return res.status(400).send({ message: 'Пользователь с указанным логином и паролем не найден.' })
       }
       console.log(user)
       return bcrypt.compare(password, user.password)
@@ -105,7 +113,7 @@ module.exports.getUserInfo = (req, res, next) => {
       if (!user) {
         return res.status(404).send({ message: 'Пользователь по указанному _id не найден.' })
       }
-      return res.send({ data: user })
+      return res.status(200).send({ data: user })
     })
     .catch((err) => next(err))
 }
