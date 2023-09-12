@@ -8,9 +8,10 @@ const { login, createUser } = require('./controllers/users')
 const auth = require('./middlewares/auth')
 const errorsHandling = require('./middlewares/errorsHandling')
 
-const port = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000
+const BD_URL = process.env.BD_URL || 'mongodb://localhost:27017/mestodb'
 
-mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true })
+mongoose.connect(BD_URL, { useNewUrlParser: true })
 mongoose.connection.on('connected', () => console.log('MongoDB is connected to the server.'))
 mongoose.connection.on('error', (err) => console.error('MongoDB connection error:', err))
 
@@ -35,4 +36,4 @@ app.use((req, res, next) => {
   res.status(404).json({ message: 'Карточка или пользователь не найдены, или был запрошен несуществующий роут.' })
 })
 
-app.listen(port, () => console.log('Server listening on port:', port))
+app.listen(PORT, () => console.log('Server listening on port:', PORT))

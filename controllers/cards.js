@@ -23,7 +23,7 @@ module.exports.deleteCardById = (req, res, next) => Cards.findByIdAndRemove(req.
     if (req.user._id !== card.owner) {
       return res.status(200).send({ message: 'У вас нет прав для удаления этой карточки.' })
     }
-    return res.send({ data: card })
+    return res.status(200).send({ data: card })
   })
   .catch((err) => next(err))
 
